@@ -26,3 +26,19 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.event {
+  cursor: pointer;
+}
+.event:hover {
+  text-decoration: underline;
+}
+.eventsList,.eventDetails {
+  display: block;
+  position: relative;
+  width: 50%;
+  float: left;
+  text-align: left;
+  padding: 12px;
+  box-sizing: border-box;
+}
