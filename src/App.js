@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Display from './Display';
 // import logo from './logo.svg';
 import './App.css';
 
@@ -12,7 +13,7 @@ class App extends Component {
         this.state = {
             sports:[],
             events:[],
-            selectedSport:10,
+            selectedSport:1,
             selectedEvent:null,
             selectedEventData:[],
             langId:1
@@ -44,7 +45,8 @@ class App extends Component {
             }));
         };
         webSocket.onclose = (evt) => {
-            console.log('WS CLOSED')
+            console.log('WS CLOSED');
+            setTimeout(()=>{this.openConnection()},5000);
         };
         webSocket.onmessage = (evt) => {
             let data;
@@ -54,9 +56,9 @@ class App extends Component {
                 data = false;
                 console.log(error);
             }
-            if(data) {
+            if(data && data.data !== null) {
                 let dataType = data.subscription.split(':');
-                console.log(dataType);
+                // console.log(dataType);
                 dataType[0]==='live_sport' && this.updateSports(data.data.d);
                 dataType[0]==='live_event' && dataType[2]==='live_sport' && this.updateEvents(data.data.d);
                 dataType[0]==='live_event' && dataType[2]==='live_event' && this.updateEventData(data.data.d);
@@ -111,12 +113,18 @@ class App extends Component {
             prevId = 2; newId = 1;
         }
         this.setState({langId:newId});
+        let subSet = [
+            `live_sport:-1::${newId}`,
+            `live_event:${this.state.selectedSport}:live_sport:${newId}`,
+            `live_event:${this.state.selectedEvent}:live_event:${newId}`
+        ];
         this.subscribe('unsubscribe',[`live_sport:-1::${prevId}`]);
         this.subscribe('unsubscribe',[`live_event:${this.state.selectedSport}:live_sport:${prevId}`]);
         this.subscribe('unsubscribe',[`live_event:${this.state.selectedEvent}:live_event:${prevId}`]);
-        this.subscribe('subscribe',[`live_sport:-1::${newId}`]);
-        this.subscribe('subscribe',[`live_event:${this.state.selectedSport}:live_sport:${newId}`]);
-        this.subscribe('subscribe',[`live_event:${this.state.selectedEvent}:live_event:${newId}`]);
+        this.subscribe('subscribe',subSet);
+        // this.subscribe('subscribe',[`live_sport:-1::${newId}`]);
+        // this.subscribe('subscribe',[`live_event:${this.state.selectedSport}:live_sport:${newId}`]);
+        // this.subscribe('subscribe',[`live_event:${this.state.selectedEvent}:live_event:${newId}`]);
     }
     subscribe(action,subscriptionSet){
         if (webSocket && webSocket.readyState === 1) {
@@ -143,7 +151,7 @@ class App extends Component {
                     <button onClick={()=>this.toggleLanguage()}>Toggle Language</button>
                 </p>
                 <div className="sportsList">
-                    {this.state.sports.length > 0 && this.state.sports.map((sport,i)=>(<p key={i}><span>{sport.N}</span> - <span>{sport.EC}</span></p>))}
+                    {this.state.sports.length > 0 && this.state.sports.map((sport,i)=>(<p key={i}>[<code>{sport.Id}</code>] <span>{sport.N}</span> - <span>{sport.EC}</span></p>))}
                 </div>
                 <div className="eventsList">
                     {this.state.events.length > 0 && this.state.events.sort((a,b)=>(a.Id > b.Id ? 1 : -1)).map((event,i)=>(
@@ -151,21 +159,7 @@ class App extends Component {
                     ))}
                 </div>
                 <div className="eventDetails">
-                    {this.state.selectedEvent && this.state.selectedEventData.length > 0 && [
-                        <p key="heading">testing event: {this.state.selectedEvent}</p>,
-                        <h4 key="champ">{this.state.selectedEventData[0].CN}</h4>,
-                        <div key="details">{this.state.selectedEventData.map((event,i)=>(
-                            <div key={i}>
-                                <h5>{event.N}</h5>
-                                {event.StakeTypes.length > 0 ? event.StakeTypes.map((stakeType,sti)=>([
-                                    <p key={sti}>{stakeType.N}</p>,
-                                    <div key={sti+'-stakes'}>{stakeType.Stakes.map((stake,si)=>(
-                                        <p key={si}>[<code>{stake.Id}</code>] {stake.N} - {stake.F}</p>
-                                    ))}</div>
-                                ])) : <p>Ставки временно не принимаются</p>}
-                            </div>
-                        ))}</div>
-                    ]}
+                    {this.state.selectedEvent && this.state.selectedEventData.length > 0 && <Display data={this.state.selectedEventData} eventId={this.state.selectedEvent}/>}
                 </div>
             </div>
         );

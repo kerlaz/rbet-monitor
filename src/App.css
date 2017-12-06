@@ -42,3 +42,25 @@
   padding: 12px;
   box-sizing: border-box;
 }
+.factor.up {
+  animation-name: factorUp;
+  animation-iteration-count: 1;
+  animation-duration: 3s;
+}
+.factor.down {
+  animation-name: factorDown;
+  animation-iteration-count: 1;
+  animation-duration: 3s;
+}
+
+@keyframes factorUp {
+  0% {color: green}
+  80% {color: green}
+  100% {color: inherit}
+}
+
+@keyframes factorDown {
+  0% {color: red}
+  80% {color: red}
+  100% {color: inherit}
+}
