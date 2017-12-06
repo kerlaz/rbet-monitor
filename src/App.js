@@ -12,6 +12,7 @@ class App extends Component {
         this.state = {
             sports:[],
             events:[],
+            selectedSport:10,
             selectedEvent:null,
             selectedEventData:[],
             langId:1
@@ -37,7 +38,7 @@ class App extends Component {
                 action: 'subscribe',
                 objects: [
                     `live_sport:-1::${this.state.langId}`,
-                    `live_event:1:live_sport:${this.state.langId}`
+                    `live_event:${this.state.selectedSport}:live_sport:${this.state.langId}`
                     // `event:3530892:event:${this.state.langId}`
                 ]
             }));
@@ -111,10 +112,10 @@ class App extends Component {
         }
         this.setState({langId:newId});
         this.subscribe('unsubscribe',[`live_sport:-1::${prevId}`]);
-        this.subscribe('unsubscribe',[`live_event:1:live_sport:${prevId}`]);
+        this.subscribe('unsubscribe',[`live_event:${this.state.selectedSport}:live_sport:${prevId}`]);
         this.subscribe('unsubscribe',[`live_event:${this.state.selectedEvent}:live_event:${prevId}`]);
         this.subscribe('subscribe',[`live_sport:-1::${newId}`]);
-        this.subscribe('subscribe',[`live_event:1:live_sport:${newId}`]);
+        this.subscribe('subscribe',[`live_event:${this.state.selectedSport}:live_sport:${newId}`]);
         this.subscribe('subscribe',[`live_event:${this.state.selectedEvent}:live_event:${newId}`]);
     }
     subscribe(action,subscriptionSet){
@@ -141,9 +142,9 @@ class App extends Component {
                 <p>
                     <button onClick={()=>this.toggleLanguage()}>Toggle Language</button>
                 </p>
-                {/*<div className="sportsList">*/}
-                    {/*{this.state.sports.length > 0 && this.state.sports.map((sport,i)=>(<p key={i}><span>{sport.N}</span> - <span>{sport.EC}</span></p>))}*/}
-                {/*</div>*/}
+                <div className="sportsList">
+                    {this.state.sports.length > 0 && this.state.sports.map((sport,i)=>(<p key={i}><span>{sport.N}</span> - <span>{sport.EC}</span></p>))}
+                </div>
                 <div className="eventsList">
                     {this.state.events.length > 0 && this.state.events.sort((a,b)=>(a.Id > b.Id ? 1 : -1)).map((event,i)=>(
                         <p className="event" key={i} onClick={()=>{this.showStakes(event.Id);}}>[<code>{event.Id}</code>] <span>{event.N}</span><br/>(<span>{event.ES}</span>) - счет: <span>{event.SS}</span> - время: <span>{event.PT} минута</span></p>
