@@ -6,14 +6,13 @@ import './App.css';
 let webSocket;
 let wsUri = 'wss://ws.rbet.kz';
 
-
 class App extends Component {
     constructor(){
         super();
         this.state = {
             sports:[],
             events:[],
-            selectedSport:1,
+            selectedSport:null,
             selectedEvent:null,
             selectedEventData:[],
             langId:1
@@ -31,8 +30,7 @@ class App extends Component {
     updateEventData(data){
         this.setState({selectedEventData:data})
     }
-
-    openConnection() {
+    openConnection(){
         webSocket = new WebSocket(wsUri);
         webSocket.onopen = (evt) => {
             webSocket.send(JSON.stringify({
@@ -68,6 +66,11 @@ class App extends Component {
             console.log('WS ERROR')
         };
     }
+    showEvents(sportId){
+        if(this.selectedSport!==null){
+            // this.subscribe('unsubscribe',[``])
+        }
+    }
     showStakes(eventId){
         console.log(eventId);
         if(this.state.selectedEvent!==null){
@@ -76,7 +79,6 @@ class App extends Component {
         this.setState({selectedEvent:eventId});
         this.subscribe('subscribe',[`live_event:${eventId}:live_event:${this.state.langId}`]);
     }
-
     static sendMessage() {
         console.log(webSocket);
         if (webSocket && webSocket.readyState === 1) {
@@ -90,11 +92,9 @@ class App extends Component {
             console.log("WS is not open yet")
         }
     }
-
     static closeConnection() {
         if (webSocket && webSocket.readyState === 1) webSocket.close();
     }
-
     testWs() {
         for (let i = 10; i > 0; i--) {
             webSocket.send(JSON.stringify({
@@ -134,7 +134,6 @@ class App extends Component {
             }))
         }
     }
-
     render() {
         return (
             <div className="App">
@@ -151,7 +150,7 @@ class App extends Component {
                     <button onClick={()=>this.toggleLanguage()}>Toggle Language</button>
                 </p>
                 <div className="sportsList">
-                    {this.state.sports.length > 0 && this.state.sports.map((sport,i)=>(<p key={i}>[<code>{sport.Id}</code>] <span>{sport.N}</span> - <span>{sport.EC}</span></p>))}
+                    {this.state.sports.length > 0 && this.state.sports.map((sport,i)=>(<p onClick={()=>{this.showEvents(sport.Id)}} key={i}>[<code>{sport.Id}</code>] <span>{sport.N}</span> - <span>{sport.EC}</span></p>))}
                 </div>
                 <div className="eventsList">
                     {this.state.events.length > 0 && this.state.events.sort((a,b)=>(a.Id > b.Id ? 1 : -1)).map((event,i)=>(
@@ -165,5 +164,4 @@ class App extends Component {
         );
     }
 }
-
 export default App;
