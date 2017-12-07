@@ -56,7 +56,7 @@ class App extends Component {
             }
             if(data && data.data !== null) {
                 let dataType = data.subscription.split(':');
-                // console.log(dataType);
+                console.log(dataType);
                 dataType[0]==='live_sport' && this.updateSports(data.data.d);
                 dataType[0]==='live_event' && dataType[2]==='live_sport' && this.updateEvents(data.data.d);
                 dataType[0]==='live_event' && dataType[2]==='live_event' && this.updateEventData(data.data.d);
@@ -68,8 +68,10 @@ class App extends Component {
     }
     showEvents(sportId){
         if(this.selectedSport!==null){
-            // this.subscribe('unsubscribe',[``])
+            this.subscribe('unsubscribe',[`live_event:${this.state.selectedSport}:live_sport:${this.state.langId}`])
         }
+        this.setState({selectedSport:sportId});
+        this.subscribe('subscribe',[`live_event:${sportId}:live_sport:${this.state.langId}`]);
     }
     showStakes(eventId){
         console.log(eventId);
