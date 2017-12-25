@@ -1,5 +1,11 @@
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: "PT Sans",sans-serif;
+}
 .App {
-  text-align: center;
+  /*text-align: center;*/
 }
 
 .App-logo {
@@ -26,21 +32,81 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-
+.settings {
+    position: absolute;
+    bottom: 0px;
+    width: 100vw;
+    height: 50vh;
+    z-index: 2;
+    background: aquamarine;
+    opacity: 0;
+    transition: opacity 200ms;
+}
+.settings:hover {
+    opacity: 1;
+    transition: opacity 200ms;
+}
+.sportsList {
+    width: 30vw;
+    float: left;
+}
 .event {
   cursor: pointer;
 }
 .event:hover {
   text-decoration: underline;
 }
-.eventsList,.eventDetails {
+.eventsList {
   display: block;
   position: relative;
-  width: 50%;
+  width: 70vw;
+  height: calc(100% - 95px) ;
   float: left;
   text-align: left;
   padding: 12px;
   box-sizing: border-box;
+  overflow: auto;
+}
+.eventDetails {
+    display: block;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    overflow-y: auto;
+}
+.eventDetails .heading {
+    font-family: "Social Gothic",Arial,sans-serif;
+    font-size: 48px;
+    line-height: 50px;
+    color: rgb(210,38,48);
+    padding: 20px 20px 0px;
+    margin: 0px;
+    border-bottom: 3px solid rgb(210,38,48);
+}
+.eventDetails .heading span:first-child {
+    color: rgb(29,49,145);
+}
+.screenLogo {
+    background: white;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+.screenLogo img {
+    max-width: 50%;
+    max-height: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    position: absolute;
+}
+.factor {
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
 }
 .factor.up {
   animation-name: factorUp;
@@ -52,7 +118,6 @@
   animation-iteration-count: 1;
   animation-duration: 3s;
 }
-
 @keyframes factorUp {
   0% {color: green}
   80% {color: green}
@@ -63,4 +128,13 @@
   0% {color: red}
   80% {color: red}
   100% {color: inherit}
+}
+.feed-wrapper {
+    padding-left: 20px;
+}
+.feed {}
+
+h3.event {
+    height: 60px;
+    background: #e0e0e0;
 }
