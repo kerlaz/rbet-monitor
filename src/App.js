@@ -64,7 +64,7 @@ class App extends Component {
                 data = false;
                 console.log(error);
             }
-            if (data && data.data !== null) {
+            if (data && data.data !== null && data.data.d.length > 0) {
                 let dataType = data.subscription.split(':');
                 console.log(dataType);
                 dataType[0] === 'live_sport' && this.updateSports(data.data.d);

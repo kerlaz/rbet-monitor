@@ -111,12 +111,12 @@ body {
 .factor.up {
   animation-name: factorUp;
   animation-iteration-count: 1;
-  animation-duration: 3s;
+  animation-duration: 5s;
 }
 .factor.down {
   animation-name: factorDown;
   animation-iteration-count: 1;
-  animation-duration: 3s;
+  animation-duration: 5s;
 }
 @keyframes factorUp {
   0% {color: green}
@@ -134,7 +134,45 @@ body {
 }
 .feed {}
 
-h3.event {
+.event-heading {
     height: 60px;
+    margin: 20px;
+    font-size: 24px;
+    line-height: 30px;
+    font-weight: 400;
     background: #e0e0e0;
+}
+.event-heading .start-time
+{
+    display: inline-block;
+    margin: 15px;
+}
+.event-heading .name {
+    display: inline-block;
+    margin-left: 0px;
+    margin-right: 15px;
+    font-weight: 600;
+}
+.event-heading .passed-time {
+    display: inline-block;
+    margin: 15px;
+}
+.event-heading .score-details{
+    display: inline-block;
+    float: right;
+    margin: 15px 0px;
+    font-size: 18px;
+}
+.event-heading .score-total {
+    display: inline-block;
+    float: right;
+    color: #ffffff;
+    background: rgb(20,123,209);
+    width: 70px;
+    margin: 10px;
+    padding: 5px;
+    text-align: center;
+}
+.stake-part-heading {
+    border-bottom: 1px solid rgb(210,38,48);
 }
