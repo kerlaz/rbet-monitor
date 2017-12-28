@@ -2,7 +2,7 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    font-family: "PT Sans",sans-serif;
+    font-family: "Arial",sans-serif;
 }
 .App {
   /*text-align: center;*/
@@ -77,8 +77,12 @@ body {
     z-index: 1;
     overflow-y: auto;
 }
+.eventDetails .logo-top {
+    height: 45px;
+    float: right;
+}
 .eventDetails .heading {
-    font-family: "Social Gothic",Arial,sans-serif;
+    font-family: "Social Gothic", sans-serif;
     font-size: 48px;
     line-height: 50px;
     color: rgb(210,38,48);
@@ -86,7 +90,7 @@ body {
     margin: 0px;
     border-bottom: 3px solid rgb(210,38,48);
 }
-.eventDetails .heading span:first-child {
+.eventDetails .heading span:nth-child(2) {
     color: rgb(29,49,145);
 }
 .screenLogo {
@@ -103,10 +107,15 @@ body {
     transform: translate(-50%,-50%);
     position: absolute;
 }
+.factor-block {
+    display: inline-block;
+    min-width: 170px;
+}
 .factor {
     text-decoration: underline;
     cursor: pointer;
     font-weight: 600;
+    margin-right: 10px;
 }
 .factor.up {
   animation-name: factorUp;
@@ -173,6 +182,12 @@ body {
     padding: 5px;
     text-align: center;
 }
+.event-subheading {
+    margin-left: 20px;
+}
 .stake-part-heading {
     border-bottom: 1px solid rgb(210,38,48);
+}
+.dev-code {
+    color: #a8a8a8;
 }

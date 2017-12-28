@@ -24,3 +24,6 @@ function timeZone(marker) {
     let minutes = parseInt(marker.slice(2,4),10);
     return [hours, minutes];
 }
+export function sortFactorGroups(){
+
+}

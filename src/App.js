@@ -18,7 +18,7 @@ class App extends Component {
             selectedEventData: [],
             langId: 1,
             screen: true,
-            fontSize: 14
+            fontSize: 16
         };
     }
 
