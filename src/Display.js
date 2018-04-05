@@ -23,12 +23,12 @@ export default class Display extends Component {
                 <div key="details" className="feed-wrapper">{this.props.data.map((event, i) => (
                     <div key={i} className="feed">
                         <h5 className="stake-part-heading">P:{event.P} - EPTId:{event.EPTId}</h5>
-                        {event.StakeTypes.length > 0 ? event.StakeTypes.map((stakeType, sti) => ([
-                            <p key={sti}>{stakeType.N} <small className="dev-code">[{stakeType.Id}]</small></p>,
+                        {event.StakeTypes.length > 0 ? event.StakeTypes.map((stakeType, sti) => (<div className={stakeType.Stakes.length>3 ? "full-block" : "short-block"} key={sti + '-wrapper'}>
+                            <p key={sti} className="factor-block-heading">{stakeType.N} <small className="dev-code">[{stakeType.Id} / {stakeType.Stakes.length}]</small></p>
                             <div key={sti + '-stakes'}>{stakeType.Stakes.map((stake, si) => (
-                                <span key={si} title={stake.SFN} className="factor-block">{stake.N} {stake.A !== null && `(${stake.A})`} - <Factor factor={stake.F}/> </span>
+                                <span key={si} title={stake.SFN} className="factor-block"><span className="factor-name">{stake.N} {stake.A !== null && `(${stake.A})`}</span> - <Factor factor={stake.F}/> </span>
                             ))}</div>
-                        ])) : <p>Ставки временно не принимаются</p>}
+                        </div>)) : <p>Ставки временно не принимаются</p>}
                     </div>
                 ))}</div>
             ]

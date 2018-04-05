@@ -170,7 +170,7 @@ class App extends Component {
                     <div className="sportsList">
                         {this.state.sports.length > 0 && this.state.sports.map((sport, i) => (<p onClick={() => {
                             this.showEvents(sport.Id)
-                        }} key={i}>[<code>{sport.Id}</code>] <span>{sport.N}</span> - <span>{sport.EC}</span></p>))}
+                        }} key={i}>[<code>{sport.Id}</code>] <span style={{cursor:"pointer"}}>{sport.N}</span> - <span>{sport.EC}</span></p>))}
                     </div>
                     <div className="eventsList">
                         {this.state.events.length > 0 && this.state.events.sort((a, b) => (a.Id > b.Id ? 1 : -1)).map((event, i) => (
