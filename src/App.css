@@ -34,21 +34,23 @@ body {
 }
 .settings {
     position: absolute;
-    bottom: 0px;
-    width: 100vw;
-    height: 50vh;
+    left: 0px;
+    width: 20px;
+    height: 100vh;
+    overflow: hidden;
     z-index: 2;
     background: rgba(255, 255, 255, 0.76);
     box-shadow: 0px 0px 12px 4px rgba(0,0,0,0.25);
     opacity: 0;
-    transition: opacity 200ms;
+    transition: opacity, width 200ms;
 }
 .settings:hover {
+    width: 80vw;
     opacity: 1;
-    transition: opacity 200ms;
+    transition: opacity, width 200ms;
 }
 .sportsList {
-    width: 30vw;
+    width: 20vw;
     float: left;
 }
 .event {
@@ -60,7 +62,7 @@ body {
 .eventsList {
   display: block;
   position: relative;
-  width: 70vw;
+  width: 60vw;
   height: calc(100% - 95px) ;
   float: left;
   text-align: left;
@@ -142,7 +144,10 @@ body {
 .feed-wrapper {
     padding-left: 20px;
 }
-.feed {}
+.feed {
+    clear: both;
+    padding-top: 20px;
+}
 
 .event-heading {
     height: 60px;
@@ -185,9 +190,14 @@ body {
 }
 .event-subheading {
     margin-left: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 .stake-part-heading {
     border-bottom: 1px solid rgb(210,38,48);
+    margin: 0px;
+    font-size: 24px;
+    font-weight: normal;
 }
 .dev-code {
     color: #a8a8a8;
@@ -208,4 +218,8 @@ body {
 }
 .factor-block-heading {
     font-size: 16px;
+}
+.clearing {
+    height: 24px;
+    clear: both;
 }

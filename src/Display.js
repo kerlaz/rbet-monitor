@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Factor from './components/Factor';
-import {netDate} from './utils';
+import {netDate, sortFactorGroups} from './utils';
 import logo from './svg/logo_fix.svg';
 
 export default class Display extends Component {
@@ -22,7 +22,7 @@ export default class Display extends Component {
                 <h4 key="champ" className="event-subheading">{this.props.data[0].CN}</h4>,
                 <div key="details" className="feed-wrapper">{this.props.data.map((event, i) => (
                     <div key={i} className="feed">
-                        <h5 className="stake-part-heading">P:{event.P} - EPTId:{event.EPTId}</h5>
+                        <h5 className="stake-part-heading">{sortFactorGroups(event.P+":"+event.EPTId)}</h5>
                         {event.StakeTypes.length > 0 ? event.StakeTypes.map((stakeType, sti) => (<div className={stakeType.Stakes.length>3 ? "full-block" : "short-block"} key={sti + '-wrapper'}>
                             <p key={sti} className="factor-block-heading">{stakeType.N} <small className="dev-code">[{stakeType.Id} / {stakeType.Stakes.length}]</small></p>
                             <div key={sti + '-stakes'}>{stakeType.Stakes.map((stake, si) => (
@@ -33,8 +33,8 @@ export default class Display extends Component {
                 ))}</div>
             ]
         } else {
-            display = <div className="screenLogo"><img src={this.props.logo} alt="r-bet logo" /></div>
+            display = <div className="screenLogo" key="display"><img src={this.props.logo} alt="r-bet logo" /></div>
         }
-        return display
+        return [display,<div className="clearing" key="clearing"></div>]
     }
 }

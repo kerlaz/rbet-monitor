@@ -49,7 +49,16 @@ class App extends Component {
                     // `event:3530892:event:${this.state.langId}`
                 ]
             }));
+            if(this.state.selectedEvent !== null) {
+                webSocket.send(JSON.stringify({
+                    action: 'subscribe',
+                    objects: [
+                        `live_event:${this.state.selectedEvent}:live_event:${this.state.langId}`
+                    ]
+                }));
+            }
         };
+
         webSocket.onclose = (evt) => {
             console.log('WS CLOSED');
             setTimeout(() => {
@@ -66,7 +75,7 @@ class App extends Component {
             }
             if (data && data.data !== null && data.data.d.length > 0) {
                 let dataType = data.subscription.split(':');
-                console.log(dataType);
+                // console.log(dataType);
                 dataType[0] === 'live_sport' && this.updateSports(data.data.d);
                 dataType[0] === 'live_event' && dataType[2] === 'live_sport' && this.updateEvents(data.data.d);
                 dataType[0] === 'live_event' && dataType[2] === 'live_event' && this.updateEventData(data.data.d);
@@ -86,7 +95,7 @@ class App extends Component {
     }
 
     showStakes(eventId) {
-        console.log(eventId);
+        // console.log(eventId);
         if (this.state.selectedEvent !== null) {
             this.subscribe('unsubscribe', [`live_event:${this.state.selectedEvent}:live_event:${this.state.langId}`]);
         }
@@ -108,7 +117,7 @@ class App extends Component {
         }
     }
 
-    static closeConnection() {
+    closeConnection() {
         if (webSocket && webSocket.readyState === 1) webSocket.close();
     }
 
@@ -162,7 +171,7 @@ class App extends Component {
                 <Settings>
                     <p className="App-intro">
                         <button onClick={this.openConnection.bind(this)}>Connect</button>
-                        <button onClick={App.closeConnection.bind(this)}>Disconnect</button>
+                        <button onClick={this.closeConnection.bind(this)}>Disconnect</button>
                     </p>
                     <p>
                         <button onClick={()=>this.toggleLanguage()}>Toggle Language</button>
