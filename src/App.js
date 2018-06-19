@@ -60,10 +60,10 @@ class App extends Component {
         };
 
         webSocket.onclose = (evt) => {
-            console.log('WS CLOSED');
+            console.log(new Date(),'WS CLOSED');
             setTimeout(() => {
                 this.openConnection()
-            }, 5000);
+            }, 2000);
         };
         webSocket.onmessage = (evt) => {
             let data;
@@ -82,7 +82,7 @@ class App extends Component {
             }
         };
         webSocket.onerror = (evt) => {
-            console.log('WS ERROR')
+            console.log(new Date(),'WS ERROR')
         };
     }
 
