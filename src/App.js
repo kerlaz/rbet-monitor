@@ -6,13 +6,17 @@ import './App.css';
 
 let webSocket;
 let wsUri = 'wss://ws.rbet.kz';
+const sType = {live:"sport",pre:"sport"};
+const eType = {live:"championship",pre:"event"};
 
 class App extends Component {
     constructor() {
         super();
         this.state = {
             sports: [],
+            sType: sType.live,
             events: [],
+            eType: eType.live,
             selectedSport: null,
             selectedEvent: null,
             selectedEventData: [],
@@ -20,6 +24,7 @@ class App extends Component {
             screen: true,
             fontSize: 16
         };
+        window.subscribe = this.subscribe;
     }
 
     componentDidMount() {
@@ -44,8 +49,8 @@ class App extends Component {
             webSocket.send(JSON.stringify({
                 action: 'subscribe',
                 objects: [
-                    `live_sport:-1::${this.state.langId}`,
-                    `live_event:${this.state.selectedSport}:live_sport:${this.state.langId}`
+                    `${this.state.sType}:-1::${this.state.langId}`,
+                    `${this.state.eType}:${this.state.selectedSport}:${this.state.sType}:${this.state.langId}`
                     // `event:3530892:event:${this.state.langId}`
                 ]
             }));
@@ -53,7 +58,7 @@ class App extends Component {
                 webSocket.send(JSON.stringify({
                     action: 'subscribe',
                     objects: [
-                        `live_event:${this.state.selectedEvent}:live_event:${this.state.langId}`
+                        `${this.state.eType}:${this.state.selectedEvent}:${this.state.eType}:${this.state.langId}`
                     ]
                 }));
             }
@@ -75,10 +80,11 @@ class App extends Component {
             }
             if (data && data.data !== null && data.data.d.length > 0) {
                 let dataType = data.subscription.split(':');
-                // console.log(dataType);
-                dataType[0] === 'live_sport' && this.updateSports(data.data.d);
-                dataType[0] === 'live_event' && dataType[2] === 'live_sport' && this.updateEvents(data.data.d);
-                dataType[0] === 'live_event' && dataType[2] === 'live_event' && this.updateEventData(data.data.d);
+                console.log(dataType);
+                console.log(dataType[0].indexOf('sport') >= 0);
+                dataType[0].indexOf('sport') >= 0 && this.updateSports(data.data.d);
+                dataType[0].indexOf('championship') >= 0 && dataType[2].indexOf('sport') >= 0 && this.updateEvents(data.data.d);
+                dataType[0] === ('live_event' || 'event') && dataType[2] === ('live_event' || 'event') && this.updateEventData(data.data.d);
             }
         };
         webSocket.onerror = (evt) => {
@@ -88,19 +94,19 @@ class App extends Component {
 
     showEvents(sportId) {
         if (this.selectedSport !== null) {
-            this.subscribe('unsubscribe', [`live_event:${this.state.selectedSport}:live_sport:${this.state.langId}`])
+            this.subscribe('unsubscribe', [`${this.state.eType}:${this.state.selectedSport}:${this.state.sType}:${this.state.langId}`])
         }
         this.setState({selectedSport: sportId});
-        this.subscribe('subscribe', [`live_event:${sportId}:live_sport:${this.state.langId}`]);
+        this.subscribe('subscribe', [`${this.state.eType}:${sportId}:${this.state.sType}:${this.state.langId}`]);
     }
 
     showStakes(eventId) {
         // console.log(eventId);
         if (this.state.selectedEvent !== null) {
-            this.subscribe('unsubscribe', [`live_event:${this.state.selectedEvent}:live_event:${this.state.langId}`]);
+            this.subscribe('unsubscribe', [`${this.state.eType}:${this.state.selectedEvent}:${this.state.eType}:${this.state.langId}`]);
         }
         this.setState({selectedEvent: eventId});
-        this.subscribe('subscribe', [`live_event:${eventId}:live_event:${this.state.langId}`]);
+        this.subscribe('subscribe', [`${this.state.eType}:${eventId}:${this.state.eType}:${this.state.langId}`]);
     }
 
     static sendMessage() {
