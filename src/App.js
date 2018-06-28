@@ -93,7 +93,8 @@ class App extends Component {
                 dataType[0].indexOf('sport') >= 0 && this.updateSports(data.data.d);
                 dataType[0].indexOf('championship') >= 0 && this.updateChamps(data.data.d);
                 dataType[0].indexOf('event') >= 0 && dataType[2].indexOf('sport') >= 0 && this.updateEvents(data.data.d);
-                dataType[0] === ('live_event' || 'event') && dataType[2] === ('live_event' || 'event') && this.updateEventData(data.data.d);
+                dataType[0].indexOf('event') >= 0 && dataType[2].indexOf('championship') >= 0 && this.updateEvents(data.data.d);
+                dataType[0].indexOf('event') >= 0 && dataType[2].indexOf('event') >= 0 && this.updateEventData(data.data.d);
             }
         };
         webSocket.onerror = (evt) => {
@@ -114,6 +115,14 @@ class App extends Component {
         }
         this.setState({selectedSport: sportId});
         this.subscribe('subscribe', [`${this.state.eType}:${sportId}:${this.state.sType}:${this.state.langId}`]);
+    }
+
+     showEventsByChamp(champId) {
+        if (this.state.selectedChampionship !== null) {
+            this.subscribe('unsubscribe', [`${this.state.eType}:${this.state.selectedChampionship}:${cType.pre}:${this.state.langId}`])
+        }
+        this.setState({selectedChampionship: champId});
+        this.subscribe('subscribe', [`${this.state.eType}:${champId}:${cType.pre}:${this.state.langId}`]);
     }
 
     showStakes(eventId) {
@@ -231,6 +240,13 @@ class App extends Component {
                         {this.state.sports.length > 0 && this.state.sports.map((sport, i) => (<p onClick={() => {
                             this.state.sType === 'sport' ? this.showChamps(sport.Id) : this.showEvents(sport.Id)
                         }} key={i}>[<code>{sport.Id}</code>] <span style={{cursor:"pointer"}}>{sport.N}</span> - <span>{sport.EC}</span></p>))}
+                    </div>
+                    <div className="champsList">
+                        {this.state.champs.length > 0 && this.state.champs.map((country, i) => (
+                            country.CL.map((champ, j)=>(
+                                <p onClick={() => {this.showEventsByChamp(champ.Id)}} key={`${i}-${j}`}>[<code>{champ.Id}</code>] <span style={{cursor:"pointer"}}>{champ.N}</span> - <span>{champ.EC}</span></p>
+                            ))
+                        ))}
                     </div>
                     <div className="eventsList">
                         {this.state.events.length > 0 && this.state.events.sort((a, b) => (a.Id > b.Id ? 1 : -1)).map((event, i) => (
