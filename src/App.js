@@ -6,18 +6,22 @@ import './App.css';
 
 let webSocket;
 let wsUri = 'wss://ws.rbet.kz';
-const sType = {live:"sport",pre:"sport"};
-const eType = {live:"championship",pre:"event"};
+const sType = {live:"live_sport",pre:"sport"};
+const eType = {live:"live_event",pre:"event"};
+const cType = {pre:"championship"};
 
 class App extends Component {
     constructor() {
         super();
         this.state = {
+            mode: null,
             sports: [],
-            sType: sType.live,
+            sType: null,
+            champs:[],
             events: [],
-            eType: eType.live,
+            eType: null,
             selectedSport: null,
+            selectedChampionship: null,
             selectedEvent: null,
             selectedEventData: [],
             langId: 1,
@@ -33,6 +37,10 @@ class App extends Component {
 
     updateSports(data) {
         this.setState({sports: data});
+    }
+
+    updateChamps(data) {
+        this.setState({champs:data})
     }
 
     updateEvents(data) {
@@ -83,7 +91,8 @@ class App extends Component {
                 console.log(dataType);
                 console.log(dataType[0].indexOf('sport') >= 0);
                 dataType[0].indexOf('sport') >= 0 && this.updateSports(data.data.d);
-                dataType[0].indexOf('championship') >= 0 && dataType[2].indexOf('sport') >= 0 && this.updateEvents(data.data.d);
+                dataType[0].indexOf('championship') >= 0 && this.updateChamps(data.data.d);
+                dataType[0].indexOf('event') >= 0 && dataType[2].indexOf('sport') >= 0 && this.updateEvents(data.data.d);
                 dataType[0] === ('live_event' || 'event') && dataType[2] === ('live_event' || 'event') && this.updateEventData(data.data.d);
             }
         };
@@ -91,9 +100,16 @@ class App extends Component {
             console.log(new Date(),'WS ERROR')
         };
     }
+    showChamps(sportId) {
+        if (this.state.selectedSport !== null) {
+            this.subscribe('unsubscribe', [`${this.state.eType}:${this.state.selectedSport}:${this.state.sType}:${this.state.langId}`])
+        }
+        this.setState({selectedSport: sportId});
+        this.subscribe('subscribe', [`${cType.pre}:${sportId}:${this.state.sType}:${this.state.langId}`]);
+    }
 
     showEvents(sportId) {
-        if (this.selectedSport !== null) {
+        if (this.state.selectedSport !== null) {
             this.subscribe('unsubscribe', [`${this.state.eType}:${this.state.selectedSport}:${this.state.sType}:${this.state.langId}`])
         }
         this.setState({selectedSport: sportId});
@@ -170,6 +186,29 @@ class App extends Component {
             }))
         }
     }
+    getLine() {
+        this.setState({sType:sType.pre,eType:eType.pre},()=>{
+            console.log("LINE");
+            this.getSportList('line');
+            //TODO unsubscribe trash
+            //TODO subscribe line sport list
+        });
+    }
+
+    getLive() {
+        this.setState({sType:sType.live,eType:eType.live},()=>{
+            console.log("LIVE");
+            this.getSportList('live');
+            //TODO unsubscribe trash
+            //TODO subscribe live sport list
+        });
+    }
+
+    getSportList(type){
+        let unset = type === 'line' ? 'live_sport' : 'sport';
+        this.subscribe('unsubscribe',[`${unset}:-1::1`]);
+        this.subscribe('subscribe',[`${this.state.sType}:-1::1`]);
+    }
 
     render() {
         return (
@@ -180,11 +219,17 @@ class App extends Component {
                         <button onClick={this.closeConnection.bind(this)}>Disconnect</button>
                     </p>
                     <p>
+                        <button onClick={()=>{this.getLine()}}>Линия</button>
+                        <button onClick={()=>{this.getLive()}}>Лайв</button>
+                    </p>
+                    <p>
                         <button onClick={()=>this.toggleLanguage()}>Toggle Language</button>
                     </p>
+                    <p>
+                        <span>{this.state.selectedSport}</span><span>{this.state.selectedChampionship}</span><span>{this.state.selectedEvent}</span></p>
                     <div className="sportsList">
                         {this.state.sports.length > 0 && this.state.sports.map((sport, i) => (<p onClick={() => {
-                            this.showEvents(sport.Id)
+                            this.state.sType === 'sport' ? this.showChamps(sport.Id) : this.showEvents(sport.Id)
                         }} key={i}>[<code>{sport.Id}</code>] <span style={{cursor:"pointer"}}>{sport.N}</span> - <span>{sport.EC}</span></p>))}
                     </div>
                     <div className="eventsList">
