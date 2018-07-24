@@ -3,11 +3,15 @@ export function netDate(netString) {
     let time = netString.replace(reg,"").split("+");
     // console.log('time',time);
     let d = new Date(parseInt(time[0],10));
+    let n = new Date(Date.now());
     let tz = timeZone(time[1]);
-    // console.log(tz);
     d.setHours(d.getHours()+tz[0]);
     d.setMinutes(d.getMinutes()+tz[1]);
-    return addZero(d.getHours())+":"+addZero(d.getMinutes());
+    if(n-d < 0){
+        return addZero(d.getDay()+1)+"."+addZero(d.getMonth()+1)+"."+d.getFullYear()+" "+addZero(d.getHours())+":"+addZero(d.getMinutes());
+    } else {
+        return addZero(d.getHours())+":"+addZero(d.getMinutes());
+    }
 }
 export function addZero(i) {
     if (i < 10){
@@ -44,3 +48,37 @@ export function sortFactorGroups(event){
     }
     return str;
 }
+
+export function scrollTo(element, to, duration) {
+    let start = element.scrollTop,
+        change = to - start,
+        currentTime = 0,
+        increment = 20;
+
+    let animateScroll = function(){
+        currentTime += increment;
+        element.scrollTop = Math.easeInOutQuad(currentTime, start, change, duration);
+        if(currentTime < duration) {
+            setTimeout(animateScroll, increment);
+        }
+    };
+    animateScroll();
+}
+
+export function isVisible(elements){
+    console.log(elements);
+    for (let item of elements){
+        if(item) console.log(item.offsetTop);
+    }
+}
+
+//t = current time
+//b = start value
+//c = change in value
+//d = duration
+Math.easeInOutQuad = function (t, b, c, d) {
+    t /= d/2;
+    if (t < 1) return c/2*t*t + b;
+    t--;
+    return -c/2 * (t*(t-2) - 1) + b;
+};

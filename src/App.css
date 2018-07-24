@@ -39,7 +39,7 @@ body {
     height: 100vh;
     overflow: hidden;
     z-index: 2;
-    background: rgba(255, 255, 255, 0.76);
+    background: rgba(255, 255, 255, 0.95);
     box-shadow: 0px 0px 12px 4px rgba(0,0,0,0.25);
     opacity: 0;
     transition: opacity, width 200ms;
@@ -53,6 +53,19 @@ body {
 .sportsList {
     width: 20vw;
     float: left;
+}
+.sportsList p,
+.champsList p {
+    display: block;
+    margin: 1px 0px 1px 12px;
+    padding: 4px;
+    border-bottom: 1px solid #147bd1;
+    border-left: 4px solid transparent;
+    transition: .5s;
+}
+.sportsList p.selected,
+.champsList p.selected {
+    border-left: 4px solid #d22630;
 }
 .event {
   cursor: pointer;
@@ -79,7 +92,7 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: 1;
-    overflow-y: auto;
+    overflow: hidden;
 }
 .eventDetails .logo-top {
     height: 45px;
@@ -99,8 +112,8 @@ body {
 }
 .screenLogo {
     background: white;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: auto;
     overflow: hidden;
 }
 .screenLogo img {
@@ -223,4 +236,42 @@ body {
 .clearing {
     height: 24px;
     clear: both;
+}
+.type-settings {
+    height: 60px;
+}
+.type-switch {
+    display: inline-block;
+    margin: 8px;
+    padding: 8px;
+    /*font-family: "Social Gothic", sans-serif;*/
+    font-size: 14px;
+    color: rgb(255, 255, 255);
+    background-color: #147bd1;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.type-switch:hover {
+    transform: scale(1.1);
+}
+.type-switch.active {
+    background-color: rgb(210,38,48);
+}
+.top-bar .dev-code {
+    position: absolute;
+}
+.top-bar {
+    position: fixed;
+    width: 100%;
+    background-color: white;
+    height: 200px;
+    overflow: hidden;
+}
+.feed-wrapper {
+    position: absolute;
+    top: 200px;
+    width: 100%;
+    height: calc(100vh - 200px);
+    overflow-y: auto;
 }
