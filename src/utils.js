@@ -66,7 +66,7 @@ export function scrollTo(element, to, duration) {
 }
 
 export function isVisible(elements){
-    console.log(elements);
+    // console.log(elements);
     for (let item of elements){
         if(item) console.log(item.offsetTop);
     }

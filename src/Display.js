@@ -5,6 +5,8 @@ import logo from './svg/logo_fix.svg';
 
 let currentHeight = 0;
 let viewPortHeight = 0;
+let interrupter;
+let pageHeight;
 
 export default class Display extends Component {
     componentDidMount(){
@@ -13,18 +15,21 @@ export default class Display extends Component {
         console.log(viewPortHeight);
     }
     componentDidUpdate(){
-        // this.initAutoScroll();
+        console.log(interrupter);
+        let page = document.getElementsByClassName('feed-wrapper')[0];
+        pageHeight = page.scrollHeight;
     }
     initAutoScroll(){
         let page = document.getElementsByClassName('feed-wrapper')[0];
-        let pageHeight = page.scrollHeight;
+        pageHeight = page.scrollHeight;
         if(pageHeight !== currentHeight) {
             currentHeight = pageHeight;
             console.log(page, pageHeight);
-            setInterval(()=>{
+            interrupter = setInterval(()=>{
                 let currentY = page.scrollTop;
-                if (currentY < pageHeight - viewPortHeight) {
-                    scrollTo(page,currentY + viewPortHeight,1000)
+                console.log({currentY,pageHeight,viewPortHeight});
+                if (currentY+viewPortHeight < pageHeight) {
+                    scrollTo(page,currentY + viewPortHeight,2000)
                 } else {
                     scrollTo(page,0,1000)
                 }
@@ -40,7 +45,7 @@ export default class Display extends Component {
                 <header key="heading" className="top-bar">
                     <p className="heading">
                         <img src={logo} className="logo-top" alt="logo"/>
-                        <span>{this.props.sport.N.toUpperCase()}</span>
+                        <span>{this.props.sport && this.props.sport.N.toUpperCase()} </span>
                         <span>{this.props.mode}</span>
                     </p>
                     <small key="test" className="dev-code">Event:{this.props.eventId}</small>
